@@ -13,8 +13,14 @@ if ($Package) {
     $binary = Get-ChildItem $stage -Recurse -Filter artcraft-launcher.exe | Select-Object -First 1
     if (-not $binary) { throw 'Package contains no launcher executable' }
     Copy-Item -LiteralPath $binary.FullName -Destination $exe
+    Get-ChildItem -LiteralPath $binary.DirectoryName -File |
+        Where-Object { $_.Name -match '^(LICENSE-|OFL-|ATTRIBUTION\.md)' } |
+        Copy-Item -Destination $install
 } else {
     Copy-Item -LiteralPath (Join-Path $root 'target\release\artcraft-launcher.exe') -Destination $exe
+    Copy-Item (Join-Path $root 'LICENSE-MIT'), (Join-Path $root 'LICENSE-APACHE'), (Join-Path $root 'ATTRIBUTION.md') $install
+    Copy-Item (Join-Path $root 'assets\fonts\OFL-*.txt') $install
+    Copy-Item (Join-Path $root 'docs\brand\LICENSE-brand.txt') $install
 }
 New-Item -ItemType File -Force (Join-Path $install 'portable.txt') | Out-Null
 $shell = New-Object -ComObject WScript.Shell
