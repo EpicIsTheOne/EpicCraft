@@ -1,5 +1,19 @@
 # AGENTS.md: guide for AI agents and contributors
 
+## EpicCraft fork conventions
+
+This repository is EpicCraft, Epic's custom launcher and Craft App Suite fork.
+These fork conventions override upstream naming and download-source rules below.
+User-facing launcher text uses EpicCraft Launcher. App names remain unchanged.
+Verified releases from EpicIsTheOne/EpicCraft are allowed in addition to official
+storytold releases. The launcher only accepts our index entries with matching app
+assets and SHA-256 digests. Never remove that verification. Keep original licenses,
+notices and attribution. App sources live in suite/<app>; follow each app's own rules.
+The upstream craftrules repo is currently unavailable; do not infer its contents.
+When publishing a fix, increment that app's numeric version above the installed
+release, build and verify the actual app, and publish through the EpicCraft workflow.
+Unsaved work must survive maintenance: never terminate a running app to update it.
+
 ArtCraft Launcher installs, updates and launches the **Craft App Suite** (PhotoCraft, LightCraft,
 FilmCraft, DesignCraft, VectorCraft, PdfCraft, EffectCraft, WordCraft, DeckCraft, GridCraft,
 CADCraft, SoundCraft). It is written in **Rust only** (no JavaScript or TypeScript): the desktop

@@ -1,4 +1,4 @@
-# Russian (ru) catalog for ArtCraft Launcher.
+# Russian (ru) catalog for EpicCraft Launcher.
 # Format: context<TAB>source<TAB>translation
 # Empty context = plain UI string (tl!, t).
 # @id = command-id keyed (tr_id).
@@ -6,11 +6,11 @@
 # @msg = status/error message template (message, msg).
 # Other context = disambiguation for tr_ctx.
 #
-# Clean-room: written from the meaning of ArtCraft Launcher's English labels in neutral,
+# Clean-room: written from the meaning of EpicCraft Launcher's English labels in neutral,
 # international Russian, using terms Russian-speaking users of creative software know.
 #
 # Coverage: the whole interface — every menu string and tl! literal (complete_menus = true).
-# Left in English on purpose: product name "ArtCraft Launcher" (and its "Launcher" tag), suite
+# Left in English on purpose: product name "EpicCraft Launcher" (and its "Launcher" tag), suite
 # name "Craft App Suite",
 # app names (PhotoCraft, LightCraft, FilmCraft, DesignCraft, VectorCraft, PdfCraft, EffectCraft,
 # WordCraft, DeckCraft, GridCraft, CADCraft, SoundCraft), "GitHub", "Discord", "Website".
@@ -72,7 +72,7 @@
 	Reinstall	Переустановить
 	Uninstall…	Удалить…
 	All releases	Все релизы
-	ArtCraft Launcher {version} is available.	Доступен ArtCraft Launcher {version}.
+	EpicCraft Launcher {version} is available.	Доступен EpicCraft Launcher {version}.
 	Dismiss	Закрыть
 	Update and restart	Обновить и перезапустить
 	A new version is available. Would you like to relaunch with the updated version?	Доступна новая версия. Перезапустить с обновленной версией?
@@ -82,7 +82,7 @@
 	Released {date}	Релиз {date}
 	Open on GitHub	Открыть на GitHub
 	Close	Закрыть
-	ArtCraft Launcher {version}	ArtCraft Launcher {version}
+	EpicCraft Launcher {version}	EpicCraft Launcher {version}
 	Only when I ask	Только по запросу
 	Automatically download and install updates	Автоматически скачивать и устанавливать обновления
 	Notify me when an installed app has an update	Уведомлять, когда у установленного приложения есть обновление
@@ -94,11 +94,11 @@
 	Running in the background	Работа в фоне
 	Keep running in the tray when the window is closed	Оставаться в трее при закрытии окна
 	Show the window on the current desktop	Показывать окно на текущем рабочем столе
-	Start ArtCraft Launcher when I log in	Запускать ArtCraft Launcher при входе в систему
+	Start EpicCraft Launcher when I log in	Запускать EpicCraft Launcher при входе в систему
 	Community	Сообщество
 	Questions, ideas and news from the ArtCraft team	Вопросы, идеи и новости от команды ArtCraft
 	Appearance	Внешний вид
-	Quit ArtCraft Launcher	Выйти из ArtCraft Launcher
+	Quit EpicCraft Launcher	Выйти из EpicCraft Launcher
 	Done	Готово
 	Uninstall {name}?	Удалить {name}?
 	The app will be moved to the Trash. Your documents and settings stay.	Приложение будет перемещено в Корзину. Ваши документы и настройки сохранятся.
@@ -129,7 +129,7 @@
 	Open link	Открыть ссылку
 	Update	Обновить
 	{name} icon	Значок {name}
-	Loading ArtCraft Launcher…	Загрузка ArtCraft Launcher…
+	Loading EpicCraft Launcher…	Загрузка EpicCraft Launcher…
 	Cancel update	Отменить обновление
 	Stop waiting; the update can be started again later	Не ждать; обновление можно будет запустить позже
 	Download again	Скачать заново
@@ -205,7 +205,7 @@ month	Dec	дек.
 	Version {version} installed	Версия {version} установлена
 	Version {latest}	Версия {latest}
 	No release published yet	Релиз ещё не опубликован
-	ArtCraft Launcher	ArtCraft Launcher
+	EpicCraft Launcher	EpicCraft Launcher
 	App	Приложение
 	Latest	Последняя
 	Released	Релиз
@@ -240,7 +240,7 @@ month	Dec	дек.
 	Full changelog	Полный список изменений
 	link	ссылка
 	No apps match	Нет подходящих приложений
-	Open ArtCraft Launcher to update.	Откройте ArtCraft Launcher, чтобы обновить.
+	Open EpicCraft Launcher to update.	Откройте EpicCraft Launcher, чтобы обновить.
 	{name} {v} is available	Доступно обновление {name} {v}
 	{count} updates are available	Доступны обновления ({count})
 	These notes weren't fetched (GitHub's request limit was reached). They're on the release page.	Заметки не были загружены (достигнут лимит запросов GitHub). Они есть на странице релиза.
@@ -290,7 +290,7 @@ filter	Installed	Установлены
 @id	launcher.notes	Что нового
 @id	launcher.dismiss	Закрыть
 @id	settings.open	Настройки
-@id	settings.quit	Выйти из ArtCraft Launcher
+@id	settings.quit	Выйти из EpicCraft Launcher
 @id	view.grid	Сетка
 @id	view.table	Таблица
 @id	filter.all	Все
@@ -314,13 +314,13 @@ filter	Installed	Установлены
 @id	linux.preferred_kind	Устанавливать новые приложения как
 @id	tray.close_to_tray	Оставаться в трее при закрытии окна
 @id	tray.show_on_current_desktop	Показывать окно на текущем рабочем столе
-@id	tray.login_item	Запускать ArtCraft Launcher при входе в систему
+@id	tray.login_item	Запускать EpicCraft Launcher при входе в систему
 @id	appearance.theme	Внешний вид
 
 # Tray (menu bar) menu and tooltip
-	Show ArtCraft Launcher	Показать ArtCraft Launcher
+	Show EpicCraft Launcher	Показать EpicCraft Launcher
 	Check for Updates	Проверить обновления
 	Visit getartcraft.com	Открыть getartcraft.com
 	ArtCraft on GitHub	ArtCraft на GitHub
 	Join the ArtCraft Discord	Присоединиться к Discord ArtCraft
-@plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} обновление|ArtCraft Launcher · {n} обновления|ArtCraft Launcher · {n} обновлений
+@plural	EpicCraft Launcher · {n} update available|EpicCraft Launcher · {n} updates available	EpicCraft Launcher · {n} обновление|EpicCraft Launcher · {n} обновления|EpicCraft Launcher · {n} обновлений

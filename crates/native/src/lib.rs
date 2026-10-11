@@ -1,4 +1,4 @@
-//! ArtCraft Launcher's desktop backend.
+//! EpicCraft Launcher's desktop backend.
 //!
 //! [`NativeBackend`] runs every slow thing (HTTP, scanning disks, installers) on worker threads
 //! and reports back through [`Event`](artcraft_launcher_core::protocol::Event)s, so the UI never
@@ -10,6 +10,7 @@
 pub mod backend;
 pub mod desktop_entry;
 pub mod detect;
+pub mod epiccraft;
 pub mod feed_throttle;
 pub mod http;
 pub mod install;

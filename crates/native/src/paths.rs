@@ -11,7 +11,7 @@ pub struct Paths {
     pub cache: PathBuf,
 }
 
-const DIR: &str = if cfg!(any(target_os = "macos", target_os = "windows")) { "ArtCraft Launcher" } else { "artcraft-launcher" };
+const DIR: &str = if cfg!(any(target_os = "macos", target_os = "windows")) { "EpicCraft Launcher" } else { "epiccraft-launcher" };
 
 impl Paths {
     pub fn new() -> Result<Self, String> {

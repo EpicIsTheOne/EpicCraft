@@ -1,0 +1,50 @@
+{
+  "wordcraft": {
+    "upstream": "https://github.com/storytold/wordcraft",
+    "commit": "56f9456f03f508828514c392f34023636c4a59d0"
+  },
+  "cadcraft": {
+    "upstream": "https://github.com/storytold/cadcraft",
+    "commit": "54ea5e743a29acd8f3178cfaa82fb74a38c2de72"
+  },
+  "lightcraft": {
+    "upstream": "https://github.com/storytold/lightcraft",
+    "commit": "76b5377868d912db69a777bda253a5b1b96b22bd"
+  },
+  "effectcraft": {
+    "upstream": "https://github.com/storytold/effectcraft",
+    "commit": "67434e90388b6dca4417555346fa6850b6f96033"
+  },
+  "designcraft": {
+    "upstream": "https://github.com/storytold/designcraft",
+    "commit": "ca343e8985dc4d92dd65cf77a8198723b5f8a9eb"
+  },
+  "photocraft": {
+    "upstream": "https://github.com/storytold/photocraft",
+    "commit": "b1900ace289e4878c7bcaa3c085c8d93e2bec836"
+  },
+  "vectorcraft": {
+    "upstream": "https://github.com/storytold/vectorcraft",
+    "commit": "2ac3ba2b866ad9d34b2252dd8024f73e34f4b2b8"
+  },
+  "pdfcraft": {
+    "upstream": "https://github.com/storytold/pdfcraft",
+    "commit": "de8e0176ed9f1b6c67ee2777f8e8d4f9a06f189c"
+  },
+  "soundcraft": {
+    "upstream": "https://github.com/storytold/soundcraft",
+    "commit": "240aa848a04811ffff75cf193e69d9d4c404ae68"
+  },
+  "deckcraft": {
+    "upstream": "https://github.com/storytold/deckcraft",
+    "commit": "be14248577b92059eb2b8c0c9460cceffbc1f01d"
+  },
+  "filmcraft": {
+    "upstream": "https://github.com/storytold/filmcraft",
+    "commit": "0800a8b0aa4a703ba42172f415b45a61f8d8a5e1"
+  },
+  "gridcraft": {
+    "upstream": "https://github.com/storytold/gridcraft",
+    "commit": "0065485fc00a68ce28d5e91a06a37e6979ce1134"
+  }
+}

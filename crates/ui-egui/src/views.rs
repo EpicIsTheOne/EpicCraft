@@ -79,10 +79,9 @@ impl LauncherUi {
             if bar == TitleBar::MacOs {
                 ui.add_space(TRAFFIC_LIGHTS_W);
             }
-            // The ArtCraft wordmark exactly as supplied, in its own cell.
-            let logo = vec2(14.0 * crate::icons::ARTCRAFT_LOGO_ASPECT, 14.0);
-            let (cell, _) = ui.allocate_exact_size(vec2(logo.x + 40.0, h), Sense::hover());
-            egui::Image::new(crate::icons::artcraft_logo(t.dark)).alt_text(tl!("ArtCraft")).paint_at(ui, Rect::from_center_size(cell.center(), logo));
+            ui.add_space(20.0);
+            ui.label(RichText::new("EpicCraft").font(FontId::proportional(22.0)).color(t.ink_strong));
+            ui.add_space(20.0);
             widgets::rule(ui, h);
             ui.add_space(16.0);
             widgets::tag(ui, tl!("Launcher"), t.invert_bg, t.invert_fg);
@@ -133,7 +132,7 @@ impl LauncherUi {
                         widgets::tag(ui, tl!("Update"), t.accent, Color32::WHITE);
                         ui.add_space(4.0);
                         ui.label(
-                            RichText::new(fmt(tl!("ArtCraft Launcher {version} is available."), &[("version", &r.version_label())]))
+                            RichText::new(fmt(tl!("EpicCraft Launcher {version} is available."), &[("version", &r.version_label())]))
                                 .family(theme::medium())
                                 .color(t.ink_strong),
                         );

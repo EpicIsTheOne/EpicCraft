@@ -1,4 +1,4 @@
-//! ArtCraft Launcher: install, update and open the Craft App Suite.
+//! EpicCraft Launcher: install, update and open the Craft App Suite.
 //!
 //! The window can close to the tray (menu bar) and keep checking for updates, or quit entirely.
 
@@ -24,7 +24,7 @@ use artcraft_launcher_ui_egui::theme::Tokens;
 use artcraft_launcher_ui_egui::{Host, LauncherUi, Settings, TitleBar};
 use eframe::wgpu::rwh::{HasDisplayHandle, RawDisplayHandle};
 
-const APP_ID: &str = "ai.storyteller.artcraft-launcher";
+const APP_ID: &str = "io.github.epicistheone.epiccraft";
 const SETTINGS_KEY: &str = "settings";
 
 type Wake = Arc<OnceLock<Box<dyn Fn() + Send + Sync>>>;
@@ -70,7 +70,7 @@ fn main() -> ExitCode {
             let result = {
                 let (waker, launcher) = (waker.clone(), &mut launcher);
                 eframe::run_native(
-                    "ArtCraft Launcher",
+                    "EpicCraft Launcher",
                     native_options(hidden),
                     Box::new(move |cc| {
                         launcher.open(cc, &waker);
@@ -99,7 +99,7 @@ fn native_options(hidden: bool) -> eframe::NativeOptions {
     let icon =
         eframe::icon_data::from_png_bytes(include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png")).ok();
     let mut viewport = egui::ViewportBuilder::default()
-        .with_title("ArtCraft Launcher")
+        .with_title("EpicCraft Launcher")
         .with_app_id(APP_ID)
         .with_inner_size([1120.0, 760.0])
         .with_min_inner_size([720.0, 500.0])
@@ -297,7 +297,7 @@ impl Host for DesktopHost {
         // Some platforms block while the notification is delivered.
         std::thread::spawn(move || {
             let mut n = notify_rust::Notification::new();
-            n.summary(&title).body(&body).appname("ArtCraft Launcher");
+            n.summary(&title).body(&body).appname("EpicCraft Launcher");
             #[cfg(windows)]
             n.app_id(APP_ID);
             #[cfg(all(unix, not(target_os = "macos")))]

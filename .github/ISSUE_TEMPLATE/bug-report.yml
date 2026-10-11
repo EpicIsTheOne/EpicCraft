@@ -1,0 +1,25 @@
+name: App bug
+description: Report a problem in an EpicCraft or Craft app
+title: '[Bug] '
+body:
+  - type: dropdown
+    id: app
+    attributes:
+      label: App
+      options: [EpicCraft Launcher, PhotoCraft, VectorCraft, FilmCraft, LightCraft, PdfCraft, EffectCraft, DesignCraft, WordCraft, DeckCraft, GridCraft, CADCraft, SoundCraft]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: The version shown in the launcher or About window
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: What you clicked, what happened, and what you expected. Screenshots or a small sample file help.
+    validations:
+      required: true

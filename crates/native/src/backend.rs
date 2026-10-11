@@ -63,7 +63,7 @@ struct Shared {
     /// A detection pass is running; another request waits for the next one.
     detecting: AtomicBool,
     last_check: Mutex<Option<i64>>,
-    /// The newer ArtCraft Launcher release, once a check has found one.
+    /// The newer EpicCraft Launcher release, once a check has found one.
     launcher_release: Mutex<Option<Release>>,
     /// When GitHub was last asked about each app (Unix seconds), to keep the fallback rare.
     github_asked: Mutex<HashMap<String, i64>>,
@@ -145,11 +145,21 @@ impl NativeBackend {
         let pre = self.options().prereleases;
         let feed = if pre { None } else { load_feed(&self.paths) };
         let now = crate::now();
+        let epic = crate::epiccraft::cached(&self.paths);
         for app in &SUITE {
-            let answer = match feed.as_ref().map(|f| f.answer(app, now)) {
-                Some(FeedAnswer::Fresh(Some(r))) => Some((LatestRelease::Found(r), Origin::ArtCraftApi)),
-                Some(FeedAnswer::Fresh(None)) => Some((LatestRelease::None, Origin::ArtCraftApi)),
-                _ => self.source.as_ref().and_then(|s| s.cached(&feed_repo(feed.as_ref(), app), pre)).map(|l| (l, Origin::GitHub)),
+            let answer = if let Some(release) = epic.get(app.id).filter(|release| {
+                (pre || !release.prerelease)
+                    && self
+                        .platform
+                        .is_some_and(|platform| pick_asset(release, &app.stems().collect::<Vec<_>>(), platform, platform.default_kinds()).is_some())
+            }) {
+                Some((LatestRelease::Found(release.clone()), Origin::GitHub))
+            } else {
+                match feed.as_ref().map(|f| f.answer(app, now)) {
+                    Some(FeedAnswer::Fresh(Some(r))) => Some((LatestRelease::Found(r), Origin::ArtCraftApi)),
+                    Some(FeedAnswer::Fresh(None)) => Some((LatestRelease::None, Origin::ArtCraftApi)),
+                    _ => self.source.as_ref().and_then(|s| s.cached(&feed_repo(feed.as_ref(), app), pre)).map(|l| (l, Origin::GitHub)),
+                }
             };
             if let Some((latest, from)) = answer {
                 if let LatestRelease::Found(r) = &latest {
@@ -226,6 +236,7 @@ impl NativeBackend {
         let mirror = local_mirror();
         std::thread::spawn(move || {
             shared.emit(Event::CheckStarted);
+            let epic = crate::epiccraft::releases(&http, &paths);
             let (feed, fallback) = if let Some(base) = &mirror {
                 // A local mirror answers for everything: GitHub is never asked.
                 (local_feed(&http, base), Fallback { trust_feed: true, github_every: GITHUB_FALLBACK_EVERY })
@@ -246,15 +257,27 @@ impl NativeBackend {
                     scope.spawn(|| {
                         loop {
                             let Some(app) = queue.lock().unwrap_or_else(PoisonError::into_inner).pop() else { break };
-                            let (latest, from, used) = match &mirror {
-                                Some(_) => mirror_latest(app, feed.as_ref(), now),
-                                None => latest_for(app, feed.as_ref(), fallback, source.as_ref(), &shared, pre, force, now),
+                            let (latest, from, used) = if let Some(release) = epic.get(app.id).filter(|release| {
+                                (pre || !release.prerelease)
+                                    && platform.is_some_and(|platform| {
+                                        pick_asset(release, &app.stems().collect::<Vec<_>>(), platform, platform.default_kinds()).is_some()
+                                    })
+                            }) {
+                                (Some(LatestRelease::Found(release.clone())), Origin::GitHub, Some(Source::GitHubApi))
+                            } else if app.id == LAUNCHER_ID {
+                                // Never replace this fork with the official launcher's binary.
+                                (None, Origin::GitHub, None)
+                            } else {
+                                match &mirror {
+                                    Some(_) => mirror_latest(app, feed.as_ref(), now),
+                                    None => latest_for(app, feed.as_ref(), fallback, source.as_ref(), &shared, pre, force, now),
+                                }
                             };
                             if let Some(used) = used {
                                 sources.lock().unwrap_or_else(PoisonError::into_inner).push(used);
                             }
                             if app.id == LAUNCHER_ID {
-                                // Is there a newer ArtCraft Launcher?
+                                // Is there a newer EpicCraft Launcher?
                                 if let Some(LatestRelease::Found(r)) = latest
                                     && let (Some(newest), Some(current)) = (r.version.as_ref(), crate::self_update::current_version())
                                     && version::is_newer(newest, &current)
@@ -323,7 +346,7 @@ impl NativeBackend {
             restarting
         };
         if restarting {
-            let result = Err("ArtCraft Launcher is restarting to finish its update. Try again once it's back.".into());
+            let result = Err("EpicCraft Launcher is restarting to finish its update. Try again once it's back.".into());
             self.shared.emit(Event::JobFinished { app: app.id.to_string(), result });
             return;
         }
@@ -392,7 +415,7 @@ impl NativeBackend {
         let (Some(install), Some(platform)) = (self.self_install.clone(), self.platform) else {
             self.shared.emit(Event::JobFinished {
                 app: id,
-                result: Err("this copy of ArtCraft Launcher can't update itself; download the new version instead".into()),
+                result: Err("this copy of EpicCraft Launcher can't update itself; download the new version instead".into()),
             });
             return;
         };
@@ -562,7 +585,7 @@ fn restart_blocked(mut busy: Vec<&str>) -> String {
         _ => (busy.join(", "), "were", "them"),
     };
     format!(
-        "ArtCraft Launcher didn't restart to update: {names} {were} still installing. Answer or close any password prompt, \
+        "EpicCraft Launcher didn't restart to update: {names} {were} still installing. Answer or close any password prompt, \
          let {them} finish or cancel {them}, then press Update and restart again."
     )
 }

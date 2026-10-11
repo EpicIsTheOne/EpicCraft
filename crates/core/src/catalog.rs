@@ -221,7 +221,7 @@ affiliated with, sponsored by or endorsed by any of these companies.";
 /// ArtCraft's website.
 pub const WEBSITE_URL: &str = "https://getartcraft.com";
 /// ArtCraft on GitHub: every Craft App's source.
-pub const GITHUB_URL: &str = "https://github.com/storytold";
+pub const GITHUB_URL: &str = "https://github.com/EpicIsTheOne/EpicCraft";
 /// ArtCraft's social accounts: (service, URL). Shown as small icons, less prominent than Discord.
 pub const SOCIAL: [(&str, &str); 5] = [
     ("X", "https://x.com/get_artcraft"),
@@ -234,21 +234,21 @@ pub const SOCIAL: [(&str, &str); 5] = [
 /// The ArtCraft community on Discord.
 pub const DISCORD_URL: &str = "https://discord.gg/artcraft";
 
-/// ArtCraft Launcher itself, described like a Craft App so it can update itself with the same
+/// EpicCraft Launcher itself, described like a Craft App so it can update itself with the same
 /// machinery (asset names `artcraft-launcher-<ver>-…`, bundle id `ai.storyteller.artcraft-launcher`,
-/// `ArtCraft Launcher.app`). Not part of [`SUITE`].
+/// `EpicCraft Launcher.app`). Not part of [`SUITE`].
 pub const LAUNCHER: CraftApp = app(
     "artcraft-launcher",
-    "ArtCraft Launcher",
+    "EpicCraft Launcher",
     "Installs and updates the Craft App Suite",
     "",
     AppGroup::New,
     [[0x0b, 0x0b, 0x0c], [0x0b, 0x0b, 0x0c], [0xf2, 0xf1, 0xee]],
-    "storytold/craft-launcher",
+    "EpicIsTheOne/EpicCraft",
 );
 
 /// The launcher's own repo, checked so it can say when a newer launcher is out.
-pub const LAUNCHER_REPO: &str = "storytold/craft-launcher";
+pub const LAUNCHER_REPO: &str = "EpicIsTheOne/EpicCraft";
 /// The launcher's own asset stem.
 pub const LAUNCHER_ID: &str = "artcraft-launcher";
 

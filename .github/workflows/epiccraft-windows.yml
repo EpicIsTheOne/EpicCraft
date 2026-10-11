@@ -1,0 +1,176 @@
+name: EpicCraft Windows releases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'crates/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'suite/**'
+      - '.github/workflows/epiccraft-windows.yml'
+  workflow_dispatch:
+    inputs:
+      app:
+        description: App to build
+        required: true
+        default: artcraft-launcher
+        type: choice
+        options: [artcraft-launcher, photocraft, vectorcraft, filmcraft, lightcraft, pdfcraft, effectcraft, designcraft, wordcraft, deckcraft, gridcraft, cadcraft, soundcraft]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: epiccraft-publish
+  cancel-in-progress: false
+
+jobs:
+  changed:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.apps.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: apps
+        env:
+          REQUESTED_APP: ${{ inputs.app }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          requested = os.environ.get('REQUESTED_APP')
+          before = os.environ.get('BEFORE', '')
+          apps = set()
+          if requested:
+              apps.add(requested)
+          elif not before or set(before) == {'0'}:
+              # The initial import establishes the suite baseline without rebuilding every app.
+              apps.add('artcraft-launcher')
+          else:
+              paths = subprocess.check_output(['git', 'diff', '--name-only', before, 'HEAD'], text=True).splitlines()
+              for path in paths:
+                  if path.startswith('suite/'):
+                      parts = path.split('/')
+                      if len(parts) > 2 and os.path.isfile('suite/' + parts[1] + '/Cargo.toml'):
+                          apps.add(parts[1])
+                  elif path.startswith(('apps/', 'crates/')) or path in ['Cargo.toml', 'Cargo.lock', '.github/workflows/epiccraft-windows.yml']:
+                      apps.add('artcraft-launcher')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('apps=' + json.dumps(sorted(apps)) + '\n')
+          PY
+  build:
+    needs: changed
+    if: needs.changed.outputs.apps != '[]'
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.changed.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            . -> target
+            suite/${{ matrix.app }} -> target
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install packaging tools
+        if: matrix.app != 'artcraft-launcher'
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add WixToolset.UI.wixext/5.0.2
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/checkout@v4
+        if: matrix.app != 'artcraft-launcher'
+        with:
+          repository: storytold/craft-fonts
+          path: craft-fonts
+      - name: Build, test and package
+        shell: pwsh
+        env:
+          APP: ${{ matrix.app }}
+        run: |
+          $root = $env:GITHUB_WORKSPACE
+          $version = '0.3.' + (1000 + [int]$env:GITHUB_RUN_NUMBER)
+          if ($env:APP -ne 'artcraft-launcher') {
+            Set-Location "suite/$env:APP"
+            $manifest = Get-Content Cargo.toml -Raw
+            $base = [regex]::Match($manifest, '(?s)\[workspace.package\].*?version\s*=\s*"(\d+)\.(\d+)\.(\d+)"')
+            if (-not $base.Success) { throw 'Workspace version missing' }
+            $version = "$($base.Groups[1].Value).$($base.Groups[2].Value)." + (1000 + [int]$env:GITHUB_RUN_NUMBER + [int]$base.Groups[3].Value)
+          }
+          $manifest = Get-Content Cargo.toml -Raw
+          $manifest = [regex]::Replace($manifest, '(?s)(\[workspace.package\].*?version\s*=\s*")[^"]+(")', { param($m) $m.Groups[1].Value + $version + $m.Groups[2].Value })
+          [IO.File]::WriteAllText((Join-Path (Get-Location) 'Cargo.toml'), $manifest, [Text.UTF8Encoding]::new($false))
+          cargo update --workspace
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($env:APP -eq 'artcraft-launcher') {
+            cargo test -p artcraft-launcher-core -p artcraft-launcher-native
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            cargo build --release --locked -p artcraft-launcher
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $stage = Join-Path $root 'epiccraft-package'
+            New-Item -ItemType Directory -Force $stage | Out-Null
+            Copy-Item target/release/artcraft-launcher.exe $stage
+            New-Item -ItemType File (Join-Path $stage 'portable.txt') | Out-Null
+            New-Item -ItemType Directory -Force "$root/dist/release" | Out-Null
+            Compress-Archive $stage "$root/dist/release/artcraft-launcher-$version-windows-x64-portable.zip"
+          } else {
+            $env:CRAFT_FONTS_DIR = "$root/craft-fonts"
+            cargo test --workspace --locked
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            & ./packaging/windows/package.ps1 -Arch x64
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          "VERSION=$version" >> $env:GITHUB_ENV
+          "TAG=$env:APP-v$version" >> $env:GITHUB_ENV
+          "PACKAGE_DIR=$(Join-Path (Get-Location) 'dist/release')" >> $env:GITHUB_ENV
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP: ${{ matrix.app }}
+        run: |
+          $files = Get-ChildItem $env:PACKAGE_DIR -File | Where-Object { $_.Name -match 'windows-x64.*\.(zip|msi)$' }
+          if (-not $files) { throw 'No Windows packages produced' }
+          $sums = $files | ForEach-Object { (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() + '  ' + $_.Name }
+          $sumPath = Join-Path $env:PACKAGE_DIR 'SHA256SUMS.txt'
+          $sums | Set-Content $sumPath -Encoding utf8
+          gh release create $env:TAG @($files.FullName) $sumPath --repo EpicIsTheOne/EpicCraft --title "EpicCraft $env:APP $env:VERSION" --notes "Windows build from commit $env:GITHUB_SHA. Includes the EpicCraft changes for this app."
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: published-${{ matrix.app }}
+          path: ${{ env.PACKAGE_DIR }}/SHA256SUMS.txt
+  index:
+    needs: [changed, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Update launcher index
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APPS: ${{ needs.changed.outputs.apps }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          releases = json.loads(subprocess.check_output(['gh', 'api', 'repos/EpicIsTheOne/EpicCraft/releases?per_page=100'], text=True))
+          for app in json.loads(os.environ['APPS']):
+              release = next(r for r in releases if r['tag_name'].startswith(app + '-v') and not r['draft'] and os.environ['GITHUB_SHA'] in (r.get('body') or ''))
+              subprocess.check_call(['python', 'epiccraft/publish-index.py', app, release['tag_name']])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add epiccraft/releases.json
+          git diff --cached --quiet || git commit -m 'Update EpicCraft release index'
+          git push origin main

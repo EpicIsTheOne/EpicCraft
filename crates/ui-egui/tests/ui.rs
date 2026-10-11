@@ -129,7 +129,7 @@ fn harness_with(
     let sent = Rc::new(RefCell::new(Vec::new()));
     let sent2 = sent.clone();
     let mut backend = Some(Fake { events, sent: sent2, manage, clock: Rc::new(Cell::new(NOW)) });
-    let settings = Settings { view, notify: false, ..Settings::default() };
+    let settings = Settings { auto_update: false, view, notify: false, ..Settings::default() };
     // No `.wgpu()`: it gives every test its own GPU device, and those segfault on parallel test threads (see above).
     // The default renderer creates one only when a test renders.
     let harness = Harness::builder().with_size(egui::vec2(1180.0, 900.0)).with_pixels_per_point(scale).with_theme(theme).build_ui_state(
@@ -166,7 +166,7 @@ fn keeps_working_with_no_window_then_draws_in_a_new_one() {
     let sent = Rc::new(RefCell::new(Vec::new()));
     let backend = Fake { events: events(), sent: sent.clone(), manage: true, clock: Rc::new(Cell::new(NOW)) };
     let windowless = egui::Context::default();
-    let mut ui = LauncherUi::new(&windowless, Box::new(backend), Settings { notify: false, ..Settings::default() });
+    let mut ui = LauncherUi::new(&windowless, Box::new(backend), Settings { auto_update: false, notify: false, ..Settings::default() });
     // No window: the backend's news is still taken in.
     ui.logic(&windowless, &mut NoHost);
     assert!(sent.borrow().contains(&Command::CheckForUpdates { force: false }));
@@ -567,7 +567,7 @@ fn looks_again_at_installed_apps_every_few_minutes_not_every_frame() {
             if state.is_none()
                 && let Some(b) = backend.take()
             {
-                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
             }
             if let Some(l) = state.as_mut() {
                 l.logic(&ui.ctx().clone(), &mut NoHost);
@@ -631,7 +631,7 @@ fn the_launcher_updates_itself_and_quits_to_restart() {
             if state.is_none()
                 && let Some(b) = backend.take()
             {
-                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
             }
             if let Some(l) = state.as_mut() {
                 l.logic(&ui.ctx().clone(), &mut host);
@@ -641,7 +641,7 @@ fn the_launcher_updates_itself_and_quits_to_restart() {
         None,
     );
     h.run_steps(6);
-    h.get_by_label_contains("ArtCraft Launcher 0.2.0 is available");
+    h.get_by_label_contains("EpicCraft Launcher 0.2.0 is available");
     h.get_by_label("Update and restart").click();
     h.run_steps(2);
     assert!(sent.borrow().contains(&Command::UpdateLauncher));
@@ -665,7 +665,7 @@ fn launcher_update_prompts_to_relaunch_with_updated_version() {
     let (mut h, _) = harness_with(ev, ViewMode::Grid, egui::Theme::Dark, true, 1.0);
     h.run_steps(6);
     // Dialog pops up on launch with the update prompt
-    h.get_by_label_contains("ArtCraft Launcher 0.2.0 is available");
+    h.get_by_label_contains("EpicCraft Launcher 0.2.0 is available");
     h.get_by_label("A new version is available. Would you like to relaunch with the updated version?");
     h.get_by_label("What's new");
     // Clicking "Later" dismisses the modal dialog
@@ -710,7 +710,7 @@ fn feed_announcements_and_alerts_show_until_dismissed() {
             if state.is_none()
                 && let Some(b) = backend.take()
             {
-                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
             }
             if let Some(l) = state.as_mut() {
                 l.logic(&ui.ctx().clone(), &mut NoHost);
@@ -812,7 +812,7 @@ fn the_footer_names_the_services_behind_what_is_on_screen() {
                 if state.is_none()
                     && let Some(b) = backend.take()
                 {
-                    *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                    *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
                 }
                 if let Some(l) = state.as_mut() {
                     l.logic(&ui.ctx().clone(), &mut NoHost);
@@ -855,7 +855,7 @@ fn custom_title_bar_has_window_buttons() {
             if state.is_none()
                 && let Some(b) = backend.take()
             {
-                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
             }
             if let Some(l) = state.as_mut() {
                 l.logic(&ui.ctx().clone(), &mut FramelessHost);
@@ -885,7 +885,7 @@ fn the_rate_limit_notice_never_runs_under_the_footer_links() {
                 if state.is_none()
                     && let Some(b) = backend.take()
                 {
-                    *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { notify: false, ..Settings::default() }));
+                    *state = Some(LauncherUi::new(ui.ctx(), Box::new(b), Settings { auto_update: false, notify: false, ..Settings::default() }));
                 }
                 if let Some(l) = state.as_mut() {
                     l.logic(&ui.ctx().clone(), &mut NoHost);

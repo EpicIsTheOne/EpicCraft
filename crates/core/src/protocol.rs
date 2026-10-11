@@ -41,7 +41,7 @@ pub enum Command {
     Cancel {
         app: String,
     },
-    /// Download the newer ArtCraft Launcher, put it in place and restart into it.
+    /// Download the newer EpicCraft Launcher, put it in place and restart into it.
     UpdateLauncher,
     /// Change how the backend behaves.
     Configure(BackendOptions),
@@ -153,7 +153,7 @@ pub enum Event {
         /// The service this answer came from.
         from: Origin,
     },
-    /// The latest ArtCraft Launcher release, when it's newer than this one.
+    /// The latest EpicCraft Launcher release, when it's newer than this one.
     LauncherUpdate(Release),
     /// The new launcher is in place (or will be, once this one exits): quit now so it can start.
     LauncherRestarting,

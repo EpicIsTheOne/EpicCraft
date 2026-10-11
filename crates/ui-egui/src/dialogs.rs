@@ -106,7 +106,7 @@ impl LauncherUi {
     fn launcher_update_dialog(&mut self, ui: &mut egui::Ui, r: &artcraft_launcher_core::Release) -> bool {
         let t = Tokens::get(ui.ctx());
         ui.set_width(480.0f32.min(ui.ctx().content_rect().width() - 80.0));
-        let title = fmt(tl!("ArtCraft Launcher {version} is available."), &[("version", &r.version_label())]);
+        let title = fmt(tl!("EpicCraft Launcher {version} is available."), &[("version", &r.version_label())]);
         Self::title(ui, Some(crate::icons::artcraft_mark()), &title, "");
         ui.label(RichText::new(tl!("A new version is available. Would you like to relaunch with the updated version?")).color(t.muted));
         ui.add_space(14.0);
@@ -173,7 +173,7 @@ impl LauncherUi {
         let t = Tokens::get(ui.ctx());
         // Wide enough for the community buttons and every social icon on one row.
         ui.set_width(520.0);
-        Self::title(ui, Some(crate::icons::artcraft_mark()), tl!("Settings"), &format!("ArtCraft Launcher {}", env!("CARGO_PKG_VERSION")));
+        Self::title(ui, Some(crate::icons::artcraft_mark()), tl!("Settings"), &format!("EpicCraft Launcher {}", env!("CARGO_PKG_VERSION")));
         let section = |ui: &mut egui::Ui, s: &str| {
             ui.add_space(14.0);
             widgets::hud(ui, s, t.faint);
@@ -266,7 +266,7 @@ impl LauncherUi {
                     .on_hover_text(tl!("When on, opening the launcher from the menu bar brings its window to the desktop you're on. When off, macOS switches you to the desktop the window was on."));
             }
             if let Some(mut on) = host.login_item()
-                && ui.checkbox(&mut on, tl!("Start ArtCraft Launcher when I log in")).changed()
+                && ui.checkbox(&mut on, tl!("Start EpicCraft Launcher when I log in")).changed()
                 && let Err(e) = host.set_login_item(on)
             {
                 let ctx = ui.ctx().clone();
@@ -304,7 +304,7 @@ impl LauncherUi {
         ui.add_space(24.0);
         let mut close = false;
         ui.horizontal(|ui| {
-            if self.caps.manage_apps && widgets::button(ui, tl!("Quit ArtCraft Launcher"), Kind::Secondary, 0.0).clicked() {
+            if self.caps.manage_apps && widgets::button(ui, tl!("Quit EpicCraft Launcher"), Kind::Secondary, 0.0).clicked() {
                 host.quit();
             }
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {

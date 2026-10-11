@@ -1,4 +1,4 @@
-//! ArtCraft Launcher updating itself.
+//! EpicCraft Launcher updating itself.
 //!
 //! The new version is downloaded and verified like any Craft App, then swapped in the way this
 //! copy was installed. A small helper process waits for this launcher to exit, finishes anything
@@ -35,7 +35,7 @@ use crate::process;
 /// How this running launcher was installed.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Install {
-    /// The `ArtCraft Launcher.app` bundle.
+    /// The `EpicCraft Launcher.app` bundle.
     MacApp(PathBuf),
     /// The per-user Windows Installer package; the exe.
     Msi(PathBuf),
@@ -107,7 +107,7 @@ fn detect(exe: &Path) -> Option<Install> {
         return Some(Install::Portable(exe.to_path_buf()));
     }
     // The MSI installs per user, into the folder chosen in its wizard (which it records in the
-    // registry) or by default %LOCALAPPDATA%\Programs\ArtCraft Launcher.
+    // registry) or by default %LOCALAPPDATA%\Programs\EpicCraft Launcher.
     let canonical = |p: PathBuf| p.canonicalize().unwrap_or(p);
     let recorded = msi_install_dir().map(canonical);
     let default = dirs::data_local_dir().map(|d| canonical(d.join("Programs").join(LAUNCHER.name)));
@@ -119,7 +119,7 @@ fn detect(exe: &Path) -> Option<Install> {
 fn msi_install_dir() -> Option<PathBuf> {
     use winreg::RegKey;
     use winreg::enums::HKEY_CURRENT_USER;
-    let key = RegKey::predef(HKEY_CURRENT_USER).open_subkey(r"Software\Learning Machines LLC\ArtCraft Launcher").ok()?;
+    let key = RegKey::predef(HKEY_CURRENT_USER).open_subkey(r"Software\Learning Machines LLC\EpicCraft Launcher").ok()?;
     let dir: String = key.get_value("InstallDir").ok()?;
     let dir = dir.trim();
     (!dir.is_empty()).then(|| PathBuf::from(dir))
@@ -166,7 +166,7 @@ pub fn update(
     last: &dyn Fn() -> Result<(), String>,
 ) -> Result<(), String> {
     let (asset, _) = pick_asset(release, &[LAUNCHER.id], platform, &[install.kind()])
-        .ok_or_else(|| format!("ArtCraft Launcher {} has no {} for {}", release.version_label(), install.kind().label(), platform.label()))?;
+        .ok_or_else(|| format!("EpicCraft Launcher {} has no {} for {}", release.version_label(), install.kind().label(), platform.label()))?;
     let asset = asset.clone();
     let mut job = Job { http, paths, stop, phase };
     let (file, _) = install::download(release, &asset, &mut job)?;
@@ -229,7 +229,7 @@ pub fn update(
         #[allow(unreachable_patterns)]
         _ => {
             let _ = (pid, &file);
-            Err("this copy of ArtCraft Launcher can't update itself; download the new version instead".into())
+            Err("this copy of EpicCraft Launcher can't update itself; download the new version instead".into())
         }
     }
 }
@@ -333,12 +333,12 @@ mod tests {
         assert!(marker.exists(), "never started after the old launcher exited");
     }
 
-    /// A real disk image: the new `ArtCraft Launcher.app` replaces the old one in place.
+    /// A real disk image: the new `EpicCraft Launcher.app` replaces the old one in place.
     #[cfg(target_os = "macos")]
     #[test]
     fn the_new_bundle_replaces_the_running_one() {
         fn bundle(at: &Path, version: &str) {
-            let contents = at.join("ArtCraft Launcher.app/Contents");
+            let contents = at.join("EpicCraft Launcher.app/Contents");
             std::fs::create_dir_all(contents.join("MacOS")).unwrap();
             std::fs::write(
                 contents.join("Info.plist"),
@@ -349,7 +349,7 @@ mod tests {
                 ),
             )
             .unwrap();
-            std::fs::write(contents.join("MacOS/ArtCraft Launcher"), version).unwrap();
+            std::fs::write(contents.join("MacOS/EpicCraft Launcher"), version).unwrap();
         }
         let dir = tempfile::tempdir().unwrap();
         let apps = dir.path().join("Applications");
@@ -359,7 +359,7 @@ mod tests {
         let dmg = dir.path().join("artcraft-launcher-0.2.0-macos-universal.dmg");
         let one_at_a_time = install::macos::DISK_IMAGES.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
         let ok = std::process::Command::new("hdiutil")
-            .args(["create", "-quiet", "-format", "UDZO", "-volname", "ArtCraft Launcher 0.2.0", "-srcfolder"])
+            .args(["create", "-quiet", "-format", "UDZO", "-volname", "EpicCraft Launcher 0.2.0", "-srcfolder"])
             .arg(&src)
             .arg(&dmg)
             .status()
@@ -367,21 +367,21 @@ mod tests {
             .success();
         assert!(ok, "hdiutil create failed");
         drop(one_at_a_time);
-        let current = apps.join("ArtCraft Launcher.app");
+        let current = apps.join("EpicCraft Launcher.app");
         let existing = Installed { version: None, source: InstallSource::MacApp, location: current.display().to_string(), package: None };
         // An unsigned test bundle: the signature check has its own tests in `install`.
         let expect = install::macos::Expect { team: None, version: None };
         let placed = install::macos::install_dmg(&LAUNCHER, &dmg, Some(&existing), &Paths::under(dir.path()), &expect).unwrap();
         assert_eq!(placed, current);
-        assert_eq!(std::fs::read_to_string(current.join("Contents/MacOS/ArtCraft Launcher")).unwrap(), "0.2.0");
-        assert!(!dir.path().join("Applications/.ArtCraft Launcher.app.partial").exists());
+        assert_eq!(std::fs::read_to_string(current.join("Contents/MacOS/EpicCraft Launcher")).unwrap(), "0.2.0");
+        assert!(!dir.path().join("Applications/.EpicCraft Launcher.app.partial").exists());
     }
 
     #[test]
     fn powershell_quoting_survives_apostrophes() {
-        let p = Path::new(r"C:\Users\O'Brien\AppData\Local\ArtCraft Launcher\x.msi");
-        assert_eq!(ps_quote(p), r"'C:\Users\O''Brien\AppData\Local\ArtCraft Launcher\x.msi'");
-        assert_eq!(ps_quote_arg(p), r#"'"C:\Users\O''Brien\AppData\Local\ArtCraft Launcher\x.msi"'"#);
+        let p = Path::new(r"C:\Users\O'Brien\AppData\Local\EpicCraft Launcher\x.msi");
+        assert_eq!(ps_quote(p), r"'C:\Users\O''Brien\AppData\Local\EpicCraft Launcher\x.msi'");
+        assert_eq!(ps_quote_arg(p), r#"'"C:\Users\O''Brien\AppData\Local\EpicCraft Launcher\x.msi"'"#);
     }
 
     #[test]

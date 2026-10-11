@@ -175,7 +175,7 @@ impl Default for Settings {
             close_to_tray: true,
             show_on_current_desktop: true,
             check_every: CheckEvery::Hour,
-            auto_update: false,
+            auto_update: true,
             notify: true,
             prereleases: false,
             preferred_kinds: default_preferred_kinds(),
