@@ -7,7 +7,7 @@ os.environ['EPICCRAFT_ORIGIN']='http://testserver'
 salt=secrets.token_bytes(16)
 os.environ['EPICCRAFT_PASSWORD_HASH']=salt.hex()+':'+hashlib.scrypt(b'test-pass',salt=salt,n=16384,r=8,p=1).hex()
 os.environ['EPICCRAFT_BRIDGE_TOKEN']='test-bridge'
-spec=importlib.util.spec_from_file_location('server',Path('epiccraft/feedback/server.py'));mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+spec=importlib.util.spec_from_file_location('server',Path(__file__).with_name('server.py'));mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
 c=TestClient(mod.app);base='/epiccraft/api/'
 assert c.get(base+'reports').status_code==401
 assert c.post(base+'login',json={'password':'wrong'}).status_code==401
