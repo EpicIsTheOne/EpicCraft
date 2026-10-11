@@ -540,7 +540,7 @@ fn links_open_the_right_pages() {
     assert_eq!(click_opens(&mut h, "Discord").as_deref(), Some("https://discord.gg/artcraft"));
     // The footer's ArtCraft links and each card's own pages.
     let github = all_opened(&mut h, "GitHub");
-    assert!(github.contains(&"https://github.com/storytold".to_string()), "{github:?}");
+    assert!(github.contains(&"https://github.com/EpicIsTheOne/EpicCraft".to_string()), "{github:?}");
     assert!(github.contains(&"https://github.com/storytold/photocraft".to_string()), "{github:?}");
     let sites = all_opened(&mut h, "Website");
     assert!(sites.contains(&"https://getartcraft.com".to_string()), "{sites:?}");
@@ -774,7 +774,7 @@ fn automatic_updates_queue_installs_for_outdated_apps_and_launcher() {
 }
 
 #[test]
-fn automatic_updates_are_disabled_by_default() {
+fn automatic_updates_can_be_disabled() {
     let mut ev = events();
     ev.push(Event::LauncherUpdate(release("artcraft-launcher", "0.2.0", NOW)));
     let sent = Rc::new(RefCell::new(Vec::new()));
