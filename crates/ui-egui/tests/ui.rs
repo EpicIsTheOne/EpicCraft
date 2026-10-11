@@ -801,6 +801,11 @@ fn automatic_updates_can_be_disabled() {
 }
 
 #[test]
+fn epiccraft_automatically_updates_by_default() {
+    assert!(Settings::default().auto_update);
+}
+
+#[test]
 fn the_footer_names_the_services_behind_what_is_on_screen() {
     let footer = |extra: Vec<Event>| {
         let mut evs = events();

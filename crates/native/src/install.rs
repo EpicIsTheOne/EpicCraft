@@ -47,14 +47,11 @@ pub fn install(
     job: &mut Job<'_>,
 ) -> Result<(Option<Record>, Verified), String> {
     let _ = previous;
-    if let Some(inst) = existing
-        && inst.source.launcher_can_update()
-        && process::is_running(Path::new(&inst.location))
-    {
-        return Err(format!("{} is running. Quit it, then try again.", app.name));
-    }
+    wait_for_app(existing, job.stop, job.phase)?;
     log::info!("{}: starting {} to {} ({})", app.name, if existing.is_some() { "update" } else { "install" }, release.version_label(), kind.label());
     let (file, verified) = download(release, asset, job)?;
+    // The user may have reopened the app while its update was downloading.
+    wait_for_app(existing, job.stop, job.phase)?;
     log::info!("{}: download ready ({}), running installer...", app.name, file.display());
     // Past this point the install can't be interrupted halfway.
     (job.phase)(JobPhase::Installing);
@@ -86,6 +83,25 @@ pub fn install(
     }
     // The system's own prompt was dismissed: the download itself wasn't cancelled.
     result.map(|r| (r, verified)).map_err(|e| if e == CANCELLED { INSTALL_CANCELLED.to_string() } else { e })
+}
+
+/// Keep an automatic update queued until the user closes the app. Never terminate it.
+fn wait_for_app(existing: Option<&Installed>, stop: &Stop, phase: &mut dyn FnMut(JobPhase)) -> Result<(), String> {
+    let Some(inst) = existing.filter(|inst| inst.source.launcher_can_update()) else { return Ok(()) };
+    wait_until_closed(|| process::is_running(Path::new(&inst.location)), stop, phase)
+}
+
+fn wait_until_closed(mut running: impl FnMut() -> bool, stop: &Stop, phase: &mut dyn FnMut(JobPhase)) -> Result<(), String> {
+    let mut waiting = false;
+    while running() {
+        stop.check().map_err(|_| INSTALL_CANCELLED.to_string())?;
+        if !waiting {
+            phase(JobPhase::Waiting);
+            waiting = true;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(250));
+    }
+    stop.check().map_err(|_| INSTALL_CANCELLED.to_string())
 }
 
 /// Whether the download stays on disk once the install step has ended. A failed install keeps it:
@@ -1082,6 +1098,31 @@ pub mod windows {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn queued_update_waits_until_the_app_closes() {
+        let stop = Stop::default();
+        let mut checks = 0;
+        let mut phases = Vec::new();
+        let result = wait_until_closed(
+            || {
+                checks += 1;
+                checks == 1
+            },
+            &stop,
+            &mut |phase| phases.push(phase),
+        );
+        assert_eq!(result, Ok(()));
+        assert_eq!(checks, 2);
+        assert_eq!(phases, vec![JobPhase::Waiting]);
+    }
+
+    #[test]
+    fn waiting_update_can_be_cancelled_without_closing_the_app() {
+        let stop = Stop::default();
+        stop.cancel();
+        assert_eq!(wait_until_closed(|| true, &stop, &mut |_| {}), Err(INSTALL_CANCELLED.into()));
+    }
 
     #[test]
     fn swap_keeps_the_old_copy_until_the_new_one_is_in_place() {
