@@ -67,6 +67,7 @@ pub(crate) enum Dialog {
     Notes(String),
     ConfirmUninstall(String),
     Settings,
+    Feedback,
     LauncherUpdate(artcraft_launcher_core::Release),
 }
 

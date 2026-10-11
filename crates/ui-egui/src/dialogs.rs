@@ -24,11 +24,35 @@ impl LauncherUi {
             Dialog::Notes(id) => modal.show(ctx, |ui| close = self.notes_dialog(ui, id)),
             Dialog::ConfirmUninstall(id) => modal.show(ctx, |ui| close = self.uninstall_dialog(ui, id)),
             Dialog::Settings => modal.show(ctx, |ui| close = self.settings_dialog(ui, host)),
+            Dialog::Feedback => modal.show(ctx, |ui| close = self.feedback_dialog(ui)),
             Dialog::LauncherUpdate(r) => modal.show(ctx, |ui| close = self.launcher_update_dialog(ui, r)),
         };
         if close || response.should_close() {
             self.dialog = None;
         }
+    }
+
+    fn feedback_dialog(&mut self, ui: &mut egui::Ui) -> bool {
+        ui.set_width(440.0);
+        ui.heading(tl!("Issues and feedback"));
+        ui.label(tl!("Choose an app to send a bug report or an idea. You can attach screenshots on the report page."));
+        let id = egui::Id::new("feedback_app");
+        let mut selected = ui.ctx().data_mut(|d| d.get_temp::<String>(id)).unwrap_or_else(|| "EpicCraft Launcher".to_string());
+        egui::ComboBox::from_id_salt("feedback_app_choice").selected_text(&selected).show_ui(ui, |ui| {
+            ui.selectable_value(&mut selected, "EpicCraft Launcher".to_string(), "EpicCraft Launcher");
+            for app in artcraft_launcher_core::SUITE {
+                ui.selectable_value(&mut selected, app.name.to_string(), app.name);
+            }
+        });
+        ui.ctx().data_mut(|d| d.insert_temp(id, selected.clone()));
+        ui.add_space(16.0);
+        if ui.button(tl!("Open report form")).clicked() {
+            // Catalog names contain only ASCII letters and spaces.
+            let app = selected.replace(' ', "%20");
+            ui.ctx().open_url(egui::OpenUrl::new_tab(format!("https://techexplore.us/epiccraft/submit?app={app}")));
+            return true;
+        }
+        ui.button(tl!("Close")).clicked()
     }
 
     /// The first alert from the release feed the user hasn't acknowledged, as a popup.

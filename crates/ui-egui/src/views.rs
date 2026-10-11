@@ -94,6 +94,9 @@ impl LauncherUi {
                 if widgets::nav_icon(ui, "⚙", tl!("Settings"), h, false).clicked() {
                     self.dialog = Some(Dialog::Settings);
                 }
+                if widgets::nav_link(ui, tl!("Feedback"), tl!("Report an issue or share an idea"), h, false).clicked() {
+                    self.dialog = Some(Dialog::Feedback);
+                }
                 if widgets::nav_icon(ui, "⟳", tl!("Check for updates"), h, self.checking).clicked() {
                     self.check_now();
                 }

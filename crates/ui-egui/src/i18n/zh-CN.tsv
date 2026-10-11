@@ -296,3 +296,9 @@ soundcraft	Recording, editing and mixing audio	音频录制、编辑与混音
 @msg	{name} installed: {version} (this release publishes no checksum, so only its size was checked)	{name} 已安装：{version}（此版本未发布校验和，因此只检查了文件大小）
 @msg	{name} was removed	{name} 已卸载
 @msg	{name} is running. Quit it, then try again.	{name} 正在运行。请先退出，然后重试。
+
+	Feedback	反馈
+	Report an issue or share an idea	报告问题或分享想法
+	Issues and feedback	问题与反馈
+	Choose an app to send a bug report or an idea. You can attach screenshots on the report page.	选择应用以提交错误报告或建议。您可以在报告页面附加截图。
+	Open report form	打开报告表单
