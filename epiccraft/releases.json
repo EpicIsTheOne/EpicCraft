@@ -34,13 +34,13 @@
     "immutable": false,
     "prerelease": false,
     "created_at": "2026-10-11T20:11:23Z",
-    "updated_at": "2026-10-11T20:13:24Z",
+    "updated_at": "2026-10-11T20:18:10Z",
     "published_at": "2026-10-11T20:13:24Z",
     "assets": [
       {
-        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631702157",
-        "id": 631702157,
-        "node_id": "RA_kwDOVFLhSs4lpwKN",
+        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631711385",
+        "id": 631711385,
+        "node_id": "RA_kwDOVFLhSs4lpyaZ",
         "name": "artcraft-launcher-0.3.0-windows-x64-portable.zip",
         "label": "",
         "uploader": {
@@ -66,17 +66,17 @@
         },
         "content_type": "application/zip",
         "state": "uploaded",
-        "size": 9561588,
-        "digest": "sha256:253ce1c26e6cabe57a48687567c57c3a185787c1a8e0ab5703134920a520a3d6",
+        "size": 9569289,
+        "digest": "sha256:a9401746624d2f10cbfd0e43a0e01aac06abe55cff1259d473b53a73279f5e5d",
         "download_count": 0,
-        "created_at": "2026-10-11T20:13:23Z",
-        "updated_at": "2026-10-11T20:13:24Z",
+        "created_at": "2026-10-11T20:18:10Z",
+        "updated_at": "2026-10-11T20:18:10Z",
         "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.0/artcraft-launcher-0.3.0-windows-x64-portable.zip"
       },
       {
-        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631702152",
-        "id": 631702152,
-        "node_id": "RA_kwDOVFLhSs4lpwKI",
+        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631711386",
+        "id": 631711386,
+        "node_id": "RA_kwDOVFLhSs4lpyaa",
         "name": "SHA256SUMS.txt",
         "label": "",
         "uploader": {
@@ -103,10 +103,10 @@
         "content_type": "text/plain; charset=utf-8",
         "state": "uploaded",
         "size": 115,
-        "digest": "sha256:025bf09511bd03fdac6b37189fe1dfab51eac65a4ce89da1a9cdb379e9cfcf51",
+        "digest": "sha256:b5191e7421b6b92f8c1a669b49d078cbbf58270b0123a05ec856e259a933109c",
         "download_count": 0,
-        "created_at": "2026-10-11T20:13:23Z",
-        "updated_at": "2026-10-11T20:13:23Z",
+        "created_at": "2026-10-11T20:18:10Z",
+        "updated_at": "2026-10-11T20:18:10Z",
         "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.0/SHA256SUMS.txt"
       }
     ],
