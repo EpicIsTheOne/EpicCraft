@@ -1,10 +1,10 @@
 {
   "artcraft-launcher": {
-    "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/409898989",
-    "assets_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/409898989/assets",
-    "upload_url": "https://uploads.github.com/repos/EpicIsTheOne/EpicCraft/releases/409898989/assets{?name,label}",
-    "html_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/tag/artcraft-launcher-v0.3.1004",
-    "id": 409898989,
+    "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/409901279",
+    "assets_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/409901279/assets",
+    "upload_url": "https://uploads.github.com/repos/EpicIsTheOne/EpicCraft/releases/409901279/assets{?name,label}",
+    "html_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/tag/artcraft-launcher-v0.3.1005",
+    "id": 409901279,
     "author": {
       "login": "github-actions[bot]",
       "id": 41898282,
@@ -26,22 +26,22 @@
       "user_view_type": "public",
       "site_admin": false
     },
-    "node_id": "RE_kwDOVFLhSs4Ybo_t",
-    "tag_name": "artcraft-launcher-v0.3.1004",
+    "node_id": "RE_kwDOVFLhSs4Ybpjf",
+    "tag_name": "artcraft-launcher-v0.3.1005",
     "target_commitish": "main",
-    "name": "EpicCraft artcraft-launcher 0.3.1004",
+    "name": "EpicCraft artcraft-launcher 0.3.1005",
     "draft": false,
     "immutable": false,
     "prerelease": false,
-    "created_at": "2026-10-11T20:18:10Z",
-    "updated_at": "2026-10-11T20:18:27Z",
-    "published_at": "2026-10-11T20:18:27Z",
+    "created_at": "2026-10-11T20:18:44Z",
+    "updated_at": "2026-10-11T20:22:56Z",
+    "published_at": "2026-10-11T20:22:56Z",
     "assets": [
       {
-        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631711879",
-        "id": 631711879,
-        "node_id": "RA_kwDOVFLhSs4lpyiH",
-        "name": "artcraft-launcher-0.3.1004-windows-x64-portable.zip",
+        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631720928",
+        "id": 631720928,
+        "node_id": "RA_kwDOVFLhSs4lp0vg",
+        "name": "artcraft-launcher-0.3.1005-windows-x64-portable.zip",
         "label": "",
         "uploader": {
           "login": "github-actions[bot]",
@@ -66,17 +66,17 @@
         },
         "content_type": "application/zip",
         "state": "uploaded",
-        "size": 9625534,
-        "digest": "sha256:799cf26607e70e551c06cfe00781124fce00c0cc89a05e76b5cd73eb7d6347db",
+        "size": 9625279,
+        "digest": "sha256:69995a2e200e8631e29b6ef42baa582d0a8271a83e2040d088667f2a8c4c3788",
         "download_count": 0,
-        "created_at": "2026-10-11T20:18:26Z",
-        "updated_at": "2026-10-11T20:18:26Z",
-        "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.1004/artcraft-launcher-0.3.1004-windows-x64-portable.zip"
+        "created_at": "2026-10-11T20:22:54Z",
+        "updated_at": "2026-10-11T20:22:55Z",
+        "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.1005/artcraft-launcher-0.3.1005-windows-x64-portable.zip"
       },
       {
-        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631711880",
-        "id": 631711880,
-        "node_id": "RA_kwDOVFLhSs4lpyiI",
+        "url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/releases/assets/631720930",
+        "id": 631720930,
+        "node_id": "RA_kwDOVFLhSs4lp0vi",
         "name": "SHA256SUMS.txt",
         "label": "",
         "uploader": {
@@ -103,15 +103,15 @@
         "content_type": "text/plain; charset=utf-8",
         "state": "uploaded",
         "size": 119,
-        "digest": "sha256:7ffeaf2052c12e3b9febbc5d1d038723e8ba3cfab52613cb8ffd36abdfc60160",
+        "digest": "sha256:a53e0f0b11777682d608b9fb966b3c70415cb67cfbad45fa375313a644a18a78",
         "download_count": 0,
-        "created_at": "2026-10-11T20:18:26Z",
-        "updated_at": "2026-10-11T20:18:26Z",
-        "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.1004/SHA256SUMS.txt"
+        "created_at": "2026-10-11T20:22:54Z",
+        "updated_at": "2026-10-11T20:22:54Z",
+        "browser_download_url": "https://github.com/EpicIsTheOne/EpicCraft/releases/download/artcraft-launcher-v0.3.1005/SHA256SUMS.txt"
       }
     ],
-    "tarball_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/tarball/artcraft-launcher-v0.3.1004",
-    "zipball_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/zipball/artcraft-launcher-v0.3.1004",
-    "body": "Windows build from commit 7e1a92bc75af1dadc0ef3baf9f173359d40078d3. Includes the EpicCraft changes for this app."
+    "tarball_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/tarball/artcraft-launcher-v0.3.1005",
+    "zipball_url": "https://api.github.com/repos/EpicIsTheOne/EpicCraft/zipball/artcraft-launcher-v0.3.1005",
+    "body": "Windows build from commit f19828fc096f7b6b64da3bb28d56179eb380a24d. Includes the EpicCraft changes for this app."
   }
 }
