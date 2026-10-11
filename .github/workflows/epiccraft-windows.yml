@@ -120,6 +120,9 @@ jobs:
             $stage = Join-Path $root 'epiccraft-package'
             New-Item -ItemType Directory -Force $stage | Out-Null
             Copy-Item target/release/artcraft-launcher.exe $stage
+            Copy-Item LICENSE-MIT, LICENSE-APACHE, ATTRIBUTION.md $stage
+            Copy-Item assets/fonts/OFL-*.txt $stage
+            Copy-Item docs/brand/LICENSE-brand.txt $stage
             New-Item -ItemType File (Join-Path $stage 'portable.txt') | Out-Null
             New-Item -ItemType Directory -Force "$root/dist/release" | Out-Null
             Compress-Archive $stage "$root/dist/release/artcraft-launcher-$version-windows-x64-portable.zip"
