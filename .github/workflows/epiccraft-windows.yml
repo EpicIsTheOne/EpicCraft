@@ -168,12 +168,29 @@ jobs:
           python - <<'PY'
           import json, os, subprocess
           releases = json.loads(subprocess.check_output(['gh', 'api', 'repos/EpicIsTheOne/EpicCraft/releases?per_page=100'], text=True))
+          tags = {}
           for app in json.loads(os.environ['APPS']):
               release = next(r for r in releases if r['tag_name'].startswith(app + '-v') and not r['draft'] and os.environ['GITHUB_SHA'] in (r.get('body') or ''))
-              subprocess.check_call(['python', 'epiccraft/publish-index.py', app, release['tag_name']])
+              tags[app] = release['tag_name']
+          with open('/tmp/epiccraft-tags.json', 'w') as out:
+              json.dump(tags, out)
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add epiccraft/releases.json
-          git diff --cached --quiet || git commit -m 'Update EpicCraft release index'
-          git push origin main
+          # A developer may push another fix while this build finishes. Merge only
+          # these app entries into the newest main, retrying a concurrent push.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python - <<'PY'
+          import json, subprocess
+          with open('/tmp/epiccraft-tags.json') as source:
+              for app, tag in json.load(source).items():
+                  subprocess.check_call(['python', 'epiccraft/publish-index.py', app, tag])
+          PY
+            git add epiccraft/releases.json
+            git diff --cached --quiet || git commit -m 'Update EpicCraft release index'
+            if git push origin main; then exit 0; fi
+            sleep 1
+          done
+          exit 1
